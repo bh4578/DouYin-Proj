@@ -34,12 +34,7 @@ func _infoMw() []app.HandlerFunc {
 
 func _loginMw() []app.HandlerFunc {
 	// your code...
-	println("login中间件启动")
-	return []app.HandlerFunc{func(ctx context.Context, c *app.RequestContext) {
-		c.Set("mimi", "sad")
-		println("中间件再就业")
-	},
-	}
+	return nil
 }
 
 func _registerMw() []app.HandlerFunc {
