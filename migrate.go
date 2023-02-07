@@ -1,5 +1,8 @@
 package main
 
+//
+//import "Douyin/model"
+//
 //func main() {
 //	db := model.Connect2sql()
 //	var err error

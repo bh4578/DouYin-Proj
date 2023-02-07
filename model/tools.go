@@ -12,7 +12,7 @@ import (
 
 func Connect2sql() *gorm.DB {
 	db, err := gorm.Open(
-		mysql.Open("root:XXXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
+		mysql.Open("root:zxcv@tcp(192.168.123.206:3306)/douyin?charset=utf8mb4&parseTime=True&loc=Local"),
 		&gorm.Config{})
 	if err != nil {
 		panic("数据库连接失败")
@@ -113,4 +113,32 @@ func Getvideolist(lasttime int64) []Videoinfo {
 
 	return videolist
 
+}
+
+// 返回视频点赞总数
+func GetFavoritecount(userid uint64) int64 {
+	var count int64
+	Connect2sql().Model(&Favoriteinfo{}).Where("Userid = ?", "userid").Count(&count)
+	return count
+}
+
+// 返回评论总数
+func GetCommentcount(userid, videoid uint64) int64 {
+	var count int64
+	Connect2sql().Model(&Commentinfo{}).Where("Userid = ? AND Videoid = ?", "userid", "videoid").Count(&count)
+	return count
+}
+
+// 返回关注数
+func GetFollowCount(userid uint64) int64 {
+	var count int64
+	Connect2sql().Model(&Userrelation{}).Where("Userid = ?", "userid").Count(&count)
+	return count
+}
+
+// 返回粉丝数
+func GetFollowerCount(userid uint64) int64 {
+	var count int64
+	Connect2sql().Model(&Userrelation{}).Where("Targetid = ? ", "userid").Count(&count)
+	return count
 }
