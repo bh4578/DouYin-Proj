@@ -102,9 +102,9 @@ func UserInfo(c *gin.Context) {
 	//从数据库中获得该用户
 	model.Connect2sql().First(&userinfo, userid)
 	loginuser, _ := c.Get("userinfo")
-	userlogininfo := UserLoginInfo{Id: uint64(userinfo.ID), Name: userinfo.Username,
+	userlogininfo := UserLoginInfo{Id: userinfo.ID, Name: userinfo.Username,
 		FollowCount: userinfo.FollowCount, FollowerCount: userinfo.FollowerCount,
-		IsFollow: model.Isfollow(uint64(loginuser.(*model.Userinfo).ID), uint64(userinfo.ID)),
+		IsFollow: model.Isfollow(loginuser.(*model.Userinfo).ID, userinfo.ID),
 	}
 
 	c.JSON(http.StatusOK, UserResponse{

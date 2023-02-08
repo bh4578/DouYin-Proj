@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"Douyin/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -14,41 +16,35 @@ type FeedResponse struct {
 
 // Feed same demo video_router list for every request
 func Feed(c *gin.Context) {
-	//lasttime, _ := strconv.ParseInt(c.Query("latest_time"), 10, 64)
-	var DemoVideos = []Video{
-		{
-			Id: 1,
-			Author: UserLoginInfo{
-				Id:            1,
-				Name:          "TestUser",
-				FollowCount:   0,
-				FollowerCount: 0,
-				IsFollow:      false},
-			PlayUrl:       "http://192.168.123.206:8080/static/testmv.mp4",
-			CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
-			FavoriteCount: 0,
-			CommentCount:  0,
-			IsFavorite:    false,
-		},
-		{
-			Id: 2,
-			Author: UserLoginInfo{
-				Id:            1,
-				Name:          "TestUser",
-				FollowCount:   0,
-				FollowerCount: 0,
-				IsFollow:      false},
-			PlayUrl:       "http://192.168.123.206:8080/static/bear.mp4",
-			CoverUrl:      "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
-			FavoriteCount: 0,
-			CommentCount:  0,
-			IsFavorite:    false,
-		},
+	lasttime, _ := strconv.ParseInt(c.Query("latest_time"), 10, 64)
+	var videolist []model.Videoinfo
+	db := model.Connect2sql()
+	db.Where("created_at > ?", time.Unix(lasttime, 0).
+		Format("2006-01-02 15:04:05.000")).Limit(30).Order("created_at desc").Find(&videolist)
+	lenoflist := len(videolist)
+	userinfo := make([]model.Userinfo, lenoflist)
+	if lenoflist > 0 {
+		resvideos := make([]Video, lenoflist)
+		for index, val := range videolist {
+			resvideos[index].Id = val.ID
+			db.Where("id = ?", val.Authorid).First(&userinfo[index])
+			resvideos[index].Author = UserLoginInfo{Id: userinfo[index].ID, Name: userinfo[index].Username, FollowCount: 0, FollowerCount: 0}
+			resvideos[index].CommentCount = val.Commentcount
+			resvideos[index].FavoriteCount = val.Favoritecount
+			resvideos[index].CoverUrl = val.Coverurl
+			resvideos[index].PlayUrl = val.Playurl
+			resvideos[index].IsFavorite = model.Isfavorite(userinfo[index].ID, val.ID)
+			resvideos[index].Title = val.Title
+		}
+
+		c.JSON(http.StatusOK, FeedResponse{
+			Response:  Response{StatusCode: 0},
+			VideoList: resvideos,
+			NextTime:  videolist[0].CreatedAt.Unix(),
+		})
+
+	} else {
+		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "请重新刷新列表"})
 	}
 
-	c.JSON(http.StatusOK, FeedResponse{
-		Response:  Response{StatusCode: 0},
-		VideoList: DemoVideos,
-		NextTime:  time.Now().Unix(),
-	})
 }

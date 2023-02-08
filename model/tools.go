@@ -6,18 +6,22 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
-	"strconv"
 	"time"
 )
 
-func Connect2sql() *gorm.DB {
-	db, err := gorm.Open(
-		mysql.Open("root:zxcv@tcp(192.168.123.206:3306)/douyin?charset=utf8mb4&parseTime=True&loc=Local"),
+var _db *gorm.DB
+
+func init() {
+	var err error
+	_db, err = gorm.Open(
+		mysql.Open("root:XXXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
 		&gorm.Config{})
 	if err != nil {
 		panic("数据库连接失败")
 	}
-	return db
+}
+func Connect2sql() *gorm.DB {
+	return _db
 }
 
 func Findusername(db *gorm.DB, username string) bool {
@@ -78,13 +82,15 @@ func Decodetoken(token string) []string {
 // Checktoken 此函数用于判断token是否正确，通过解码得到的id与用户名在数据库中查询是否存在
 func Checktoken(c *gin.Context) (bool, *Userinfo) {
 	token := c.Query("token")
+	if token == "" {
+		token = c.PostForm("token")
+	}
 	p := Decodetoken(token)
 	if p[0] == "" {
 		return false, nil
 	}
-	userid, _ := strconv.Atoi(p[0])
 	var userinfo Userinfo
-	result := Connect2sql().Where("ID = ? AND username = ?", userid, p[1]).Find(&userinfo)
+	result := Connect2sql().Where("ID = ? AND username = ?", p[0], p[1]).Find(&userinfo)
 	if result.RowsAffected > 0 {
 		return true, &userinfo
 	} else {
@@ -93,7 +99,7 @@ func Checktoken(c *gin.Context) (bool, *Userinfo) {
 }
 
 // 用于判断id1是否关注id2
-func Isfollow(id1 uint64, id2 uint64) bool {
+func Isfollow(id1 uint, id2 uint) bool {
 	var relaion Userrelation
 	result := Connect2sql().Where("userid = ? AND targetid = ?", id1, id2).Find(&relaion)
 	if result.RowsAffected < 1 {
@@ -114,31 +120,13 @@ func Getvideolist(lasttime int64) []Videoinfo {
 	return videolist
 
 }
+func Isfavorite(id1 uint, id2 uint) bool {
+	var relaion Userrelation
+	result := Connect2sql().Where("userid = ? AND Targetid = ?", id1, id2).Find(&relaion)
+	if result.RowsAffected < 1 {
+		return false
+	} else {
+		return true
+	}
 
-// 返回视频点赞总数
-func GetFavoritecount(userid uint64) int64 {
-	var count int64
-	Connect2sql().Model(&Favoriteinfo{}).Where("Userid = ?", "userid").Count(&count)
-	return count
-}
-
-// 返回评论总数
-func GetCommentcount(userid, videoid uint64) int64 {
-	var count int64
-	Connect2sql().Model(&Commentinfo{}).Where("Userid = ? AND Videoid = ?", "userid", "videoid").Count(&count)
-	return count
-}
-
-// 返回关注数
-func GetFollowCount(userid uint64) int64 {
-	var count int64
-	Connect2sql().Model(&Userrelation{}).Where("Userid = ?", "userid").Count(&count)
-	return count
-}
-
-// 返回粉丝数
-func GetFollowerCount(userid uint64) int64 {
-	var count int64
-	Connect2sql().Model(&Userrelation{}).Where("Targetid = ? ", "userid").Count(&count)
-	return count
 }

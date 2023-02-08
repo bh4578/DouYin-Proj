@@ -1,8 +1,5 @@
 package main
 
-//
-//import "Douyin/model"
-//
 //func main() {
 //	db := model.Connect2sql()
 //	var err error
@@ -23,6 +20,12 @@ package main
 //		return
 //	} else {
 //		println("Favoriteinfo建表成功！")
+//	}
+//	err = db.AutoMigrate(&model.Userrelation{})
+//	if err != nil {
+//		return
+//	} else {
+//		println("Userrelation建表成功！")
 //	}
 //
 //}

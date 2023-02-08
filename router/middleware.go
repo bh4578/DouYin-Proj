@@ -44,3 +44,17 @@ func RegisterMw() gin.HandlerFunc {
 
 	}
 }
+
+func FeedMw() gin.HandlerFunc {
+	// your code...
+	return func(c *gin.Context) {
+
+	}
+}
+
+func PublishMw() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+	}
+}

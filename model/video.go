@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Videoinfo struct {
 	gorm.Model
-	Authorid      int
+	Authorid      uint
 	Playurl       string
 	Coverurl      string
 	Favoritecount int
@@ -14,13 +14,13 @@ type Videoinfo struct {
 
 type Favoriteinfo struct {
 	gorm.Model
-	Userid  uint64
-	Videoid uint64
+	Userid  uint
+	Videoid uint
 }
 
 type Commentinfo struct {
 	gorm.Model
-	Userid  uint64
-	Videoid uint64
+	Userid  uint
+	Videoid uint
 	Content string
 }

@@ -16,6 +16,6 @@ type Userinfo struct {
 
 type Userrelation struct {
 	gorm.Model
-	Userid   uint64
-	Targetid uint64
+	Userid   uint
+	Targetid uint
 }

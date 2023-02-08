@@ -4,7 +4,6 @@ package main
 
 import (
 	"Douyin/router"
-	"Douyin/router/favorate_router"
 	"Douyin/router/user_router"
 	"Douyin/router/video_router"
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,6 @@ func main() {
 	root := r.Group("/douyin", router.RootMw())
 	user_router.Register(root)
 	video_router.Register(root)
-	favorate_router.Register(root)
 	r.Run()
 
 }
