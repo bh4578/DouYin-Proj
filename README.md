@@ -17,6 +17,6 @@
 
 3. 因为没有使用云服务器，因此上传文件需要修改本机ipv4地址：
 
-![image](https://user-images.githubusercontent.com/58996015/217444323-4b55d31f-a9d1-4d1f-8aed-40f139254593.png)
+![image](https://user-images.githubusercontent.com/58996015/217444584-9de55db3-28e7-4d07-9c3d-4c6242962e3f.png)
 
 4. 数据库数据类型有变动，需要drop后重新创建
