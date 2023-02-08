@@ -18,7 +18,7 @@ func FavAction(c *gin.Context) {
 	actiontype := c.Query("action_type") //1-点赞，2-取消点赞
 	//获取userid
 	userinfo, _ := c.Get("userinfo")
-	vid, _ := strconv.ParseUint(videoid, 10, 32)
+	vid, _ := strconv.ParseUint(videoid, 10, 64)
 	//连接数据库
 	db := model.Connect2sql()
 	favInfo := model.Favoriteinfo{Userid: userinfo.(*model.Userinfo).ID, Videoid: uint(vid)}
