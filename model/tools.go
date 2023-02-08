@@ -110,23 +110,17 @@ func Isfollow(id1 uint, id2 uint) bool {
 
 }
 
-// 用于返回视频列表
-func Getvideolist(lasttime int64) []Videoinfo {
-	var videolist []Videoinfo
-
-	Connect2sql().Where("created_at < ?", time.Unix(lasttime, 0).
-		Format("2006-01-02 15:04:05.000")).Limit(30).Order("created_at desc").Find(&videolist)
-
-	return videolist
-
-}
 func Isfavorite(id1 uint, id2 uint) bool {
-	var relaion Userrelation
-	result := Connect2sql().Where("userid = ? AND Targetid = ?", id1, id2).Find(&relaion)
+	var relaion Favoriteinfo
+	result := Connect2sql().Where("userid = ? AND videoid = ?", id1, id2).Find(&relaion)
 	if result.RowsAffected < 1 {
 		return false
 	} else {
-		return true
+		return relaion.Valid
 	}
-
+}
+func Getfovnum(id string) int64 {
+	var relaion Favoriteinfo
+	res := Connect2sql().Where("videoid = ? AND valid =?", id, true).Find(&relaion)
+	return res.RowsAffected
 }

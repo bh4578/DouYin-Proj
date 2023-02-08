@@ -18,4 +18,5 @@ type Userrelation struct {
 	gorm.Model
 	Userid   uint
 	Targetid uint
+	Valid    bool `gorm:"default:true"`
 }

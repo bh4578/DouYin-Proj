@@ -60,6 +60,6 @@ func Publishlist(c *gin.Context) {
 		})
 
 	} else {
-		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "加载喜欢列表错误"})
+		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "加载发布列表错误"})
 	}
 }

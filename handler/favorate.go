@@ -16,21 +16,26 @@ type FavListResponse struct {
 func FavAction(c *gin.Context) {
 	videoid := c.Query("video_id")
 	actiontype := c.Query("action_type") //1-点赞，2-取消点赞
-
 	//获取userid
-	_, userinfo := model.Checktoken(c)
-	userid := userinfo.ID
+	userinfo, _ := c.Get("userinfo")
+	vid, _ := strconv.ParseUint(videoid, 10, 32)
 	//连接数据库
 	db := model.Connect2sql()
-	videoidnum, _ := strconv.Atoi(videoid)
-	favInfo := model.Favoriteinfo{Userid: uint64(userid), Videoid: uint64(videoidnum)}
+	favInfo := model.Favoriteinfo{Userid: userinfo.(*model.Userinfo).ID, Videoid: uint(vid)}
+	res := db.Find(&favInfo)
 	if actiontype == "1" {
-		db.Create(&favInfo)
-		c.JSON(http.StatusOK, Response{StatusCode: 0, StatusMsg: "点赞成功"})
-	} else {
-		db.Delete(&favInfo)
-		c.JSON(http.StatusOK, Response{StatusCode: 0, StatusMsg: "取消点赞"})
+		if res.RowsAffected < 1 {
+			db.Create(&favInfo)
+		} else {
+			res.Update("valid", true)
+		}
+	} else if actiontype == "2" {
+		if res.RowsAffected > 0 {
+			res.Update("valid", false)
+		}
 	}
+	db.First(&model.Videoinfo{}, videoid).Update("Favoritecount", model.Getfovnum(videoid))
+	c.JSON(http.StatusOK, Response{StatusCode: 0, StatusMsg: ""})
 }
 
 // FavList 喜欢列表

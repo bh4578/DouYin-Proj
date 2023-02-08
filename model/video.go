@@ -16,6 +16,7 @@ type Favoriteinfo struct {
 	gorm.Model
 	Userid  uint
 	Videoid uint
+	Valid   bool `gorm:"default:true"`
 }
 
 type Commentinfo struct {
