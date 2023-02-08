@@ -14,7 +14,7 @@ var _db *gorm.DB
 func init() {
 	var err error
 	_db, err = gorm.Open(
-		mysql.Open("root:XXXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
+		mysql.Open("root:XXXXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
 		&gorm.Config{})
 	if err != nil {
 		panic("数据库连接失败")

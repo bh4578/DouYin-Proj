@@ -23,6 +23,7 @@ func Feed(c *gin.Context) {
 		Format("2006-01-02 15:04:05.000")).Limit(30).Order("created_at desc").Find(&videolist)
 	lenoflist := len(videolist)
 	userinfo := make([]model.Userinfo, lenoflist)
+	flag, loginuser := model.Checktoken(c)
 	if lenoflist > 0 {
 		resvideos := make([]Video, lenoflist)
 		for index, val := range videolist {
@@ -33,7 +34,7 @@ func Feed(c *gin.Context) {
 			resvideos[index].FavoriteCount = val.Favoritecount
 			resvideos[index].CoverUrl = val.Coverurl
 			resvideos[index].PlayUrl = val.Playurl
-			resvideos[index].IsFavorite = model.Isfavorite(userinfo[index].ID, val.ID)
+			resvideos[index].IsFavorite = flag && model.Isfavorite(loginuser.ID, val.ID)
 			resvideos[index].Title = val.Title
 		}
 
