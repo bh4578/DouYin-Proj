@@ -28,4 +28,10 @@ package main
 //		println("Userrelation建表成功！")
 //	}
 //
+//	err = db.AutoMigrate(&model.Comment{})
+//	if err != nil {
+//		return
+//	} else {
+//		println("Userrelation建表成功！")
+//	}
 //}

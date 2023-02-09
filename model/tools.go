@@ -119,8 +119,8 @@ func Isfavorite(id1 uint, id2 uint) bool {
 		return relaion.Valid
 	}
 }
-func Getfovnum(id string) int64 {
-	var relaion Favoriteinfo
-	res := Connect2sql().Where("videoid = ? AND valid =?", id, true).Find(&relaion)
-	return res.RowsAffected
+func Getfovnum(videoid string) int64 {
+	var count int64
+	Connect2sql().Table("favoriteinfos").Where("videoid = ? AND valid = ?", videoid, true).Count(&count)
+	return count
 }

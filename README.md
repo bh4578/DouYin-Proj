@@ -7,16 +7,10 @@
 2. https://juejin.cn/post/7196468749179928633
 
 
+修改为gin版本：
+1.上传视频功能暂未实现，需要在feed.go文件中修改url来播放视频
+![image](https://user-images.githubusercontent.com/58996015/216958350-45bbf600-2041-4fbc-b7c1-cf8372b24b93.png)
 
+2.修改了数据库的数据类型，需要drop一下数据库再创建个
 
-2023.2.8
-
-1. 基础接口全部完成（部分需要依赖其它接口功能除外），点赞功能完成
-
-2. 需要修改tool.go里的数据库dsn
-
-3. 因为没有使用云服务器，因此上传文件需要修改本机ipv4地址：
-
-![image](https://user-images.githubusercontent.com/58996015/217444584-9de55db3-28e7-4d07-9c3d-4c6242962e3f.png)
-
-4. 数据库数据类型有变动，需要drop后重新创建
+3.修改了一下项目结构

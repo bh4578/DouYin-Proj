@@ -4,6 +4,7 @@ package main
 
 import (
 	"Douyin/router"
+	"Douyin/router/comment_router"
 	"Douyin/router/favorate_router"
 	"Douyin/router/user_router"
 	"Douyin/router/video_router"
@@ -17,6 +18,7 @@ func main() {
 	user_router.Register(root)
 	video_router.Register(root)
 	favorate_router.Register(root)
+	comment_router.Register(root)
 	r.Run()
 
 }
