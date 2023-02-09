@@ -35,15 +35,15 @@ func Publishcomment(c *gin.Context) {
 		FollowerCount: temp.FollowerCount,
 		IsFollow:      false,
 	}
-
+	comment := model.Comment{Create_date: time.Now().Format("01-02"),
+		Content: comment_text, Videoid: uint(video_id), Authorid: temp.ID}
 	if action_type == "1" {
-		model.Connect2sql().Create(&model.Comment{Create_date: time.Now().Format("01-02"),
-			Content: comment_text, Videoid: uint(video_id), Authorid: temp.ID})
+		model.Connect2sql().Create(&comment)
 		c.JSON(http.StatusOK, struct {
 			Response
 			Comment CommentResponse
 		}{Response: Response{StatusCode: 1, StatusMsg: "发表成功"},
-			Comment: CommentResponse{Content: comment_text, User: userinfo},
+			Comment: CommentResponse{Content: comment_text, User: userinfo, Create_date: comment.Create_date, ID: comment.Id},
 		})
 	} else if action_type == "2" {
 		model.Connect2sql().Table("comments").Where("id = ?", comment_id).Delete(&Comment{})
