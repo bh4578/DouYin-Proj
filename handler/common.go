@@ -31,12 +31,6 @@ type UserLoginInfo struct {
 	IsFollow      bool   `json:"is_follow,omitempty"`
 }
 
-type Message struct {
-	Id         uint   `json:"id,omitempty"`
-	Content    string `json:"content,omitempty"`
-	CreateTime string `json:"create_time,omitempty"`
-}
-
 type MessageSendEvent struct {
 	UserId     uint   `json:"user_id,omitempty"`
 	ToUserId   int    `json:"to_user_id,omitempty"`

@@ -41,13 +41,14 @@ func Publishcomment(c *gin.Context) {
 		model.Connect2sql().Create(&comment)
 		c.JSON(http.StatusOK, struct {
 			Response
-			Comment CommentResponse
-		}{Response: Response{StatusCode: 1, StatusMsg: "发表成功"},
-			Comment: CommentResponse{Content: comment_text, User: userinfo, Create_date: comment.Create_date, ID: comment.Id},
+			Comment CommentResponse `json:"comment"`
+		}{
+			Response: Response{StatusCode: 0},
+			Comment:  CommentResponse{Content: comment_text, User: userinfo, Create_date: comment.Create_date, ID: comment.Id},
 		})
 	} else if action_type == "2" {
 		model.Connect2sql().Table("comments").Where("id = ?", comment_id).Delete(&Comment{})
-		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "删除成功"})
+		c.JSON(http.StatusOK, Response{StatusCode: 0, StatusMsg: "删除成功"})
 	}
 
 }

@@ -1,5 +1,6 @@
 package main
 
+//
 //func main() {
 //	db := model.Connect2sql()
 //	var err error
@@ -34,4 +35,10 @@ package main
 //	} else {
 //		println("Userrelation建表成功！")
 //	}
+//err = db.AutoMigrate(&model.Message{})
+//if err != nil {
+//	return
+//} else {
+//	println("Message建表成功！")
+//}
 //}

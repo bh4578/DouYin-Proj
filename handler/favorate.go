@@ -45,7 +45,7 @@ func FavList(c *gin.Context) {
 	userid := c.Query("user_id")
 	var videolist []model.Videoinfo
 	db := model.Connect2sql()
-	db.Table("videoinfos").Joins("inner join favoriteinfos on videoinfos.id = favoriteinfos.videoid").Where("favoriteinfos.userid = ?", userid).Scan(&videolist)
+	db.Table("videoinfos").Joins("inner join favoriteinfos on videoinfos.id = favoriteinfos.videoid").Where("favoriteinfos.userid = ? AND favoriteinfos.valid = ?", userid, true).Scan(&videolist)
 	loginid, _ := c.Get("userinfo")
 	lenoflist := len(videolist)
 	userinfo := make([]model.Userinfo, lenoflist)

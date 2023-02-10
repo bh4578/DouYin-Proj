@@ -14,7 +14,7 @@ var _db *gorm.DB
 func init() {
 	var err error
 	_db, err = gorm.Open(
-		mysql.Open("root:XXXXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
+		mysql.Open("root:XXXX@tcp(127.0.0.1:3306)/douyin?charset=utf8&parseTime=True&loc=Local"),
 		&gorm.Config{})
 	if err != nil {
 		panic("数据库连接失败")
@@ -76,7 +76,6 @@ func Decodetoken(token string) []string {
 		return []string{"", ""}
 	}
 	return []string{parse.Claims.(jwt.MapClaims)["userid"].(string), parse.Claims.(jwt.MapClaims)["username"].(string)}
-
 }
 
 // Checktoken 此函数用于判断token是否正确，通过解码得到的id与用户名在数据库中查询是否存在
@@ -100,8 +99,11 @@ func Checktoken(c *gin.Context) (bool, *Userinfo) {
 
 // 用于判断id1是否关注id2
 func Isfollow(id1 uint, id2 uint) bool {
+	if id1 == id2 {
+		return true
+	}
 	var relaion Userrelation
-	result := Connect2sql().Where("userid = ? AND targetid = ?", id1, id2).Find(&relaion)
+	result := Connect2sql().Where("userid = ? AND targetid = ? AND valid = true", id1, id2).Find(&relaion)
 	if result.RowsAffected < 1 {
 		return false
 	} else {
@@ -112,7 +114,7 @@ func Isfollow(id1 uint, id2 uint) bool {
 
 func Isfavorite(id1 uint, id2 uint) bool {
 	var relaion Favoriteinfo
-	result := Connect2sql().Where("userid = ? AND videoid = ?", id1, id2).Find(&relaion)
+	result := Connect2sql().Where("userid = ? AND videoid = ? AND valid = true", id1, id2).Find(&relaion)
 	if result.RowsAffected < 1 {
 		return false
 	} else {
@@ -122,5 +124,16 @@ func Isfavorite(id1 uint, id2 uint) bool {
 func Getfovnum(videoid string) int64 {
 	var count int64
 	Connect2sql().Table("favoriteinfos").Where("videoid = ? AND valid = ?", videoid, true).Count(&count)
+	return count
+}
+func Getfollownum(userid uint) int64 {
+	var count int64
+	Connect2sql().Table("Userrelations").Where("userid = ? AND valid = ?", userid, true).Count(&count)
+	return count
+}
+
+func Getfollowernum(targetid uint) int64 {
+	var count int64
+	Connect2sql().Table("Userrelations").Where("targetid = ? AND valid = ?", targetid, true).Count(&count)
 	return count
 }

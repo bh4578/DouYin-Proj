@@ -22,6 +22,7 @@ func Feed(c *gin.Context) {
 	db.Where("created_at > ?", time.Unix(lasttime, 0).
 		Format("2006-01-02 15:04:05.000")).Limit(30).Order("created_at desc").Find(&videolist)
 	lenoflist := len(videolist)
+
 	var userinfo model.Userinfo
 	flag, loginuser := model.Checktoken(c)
 	if lenoflist > 0 {
@@ -29,7 +30,7 @@ func Feed(c *gin.Context) {
 		for index, val := range videolist {
 			resvideos[index].Id = val.ID
 			db.Where("id = ?", val.Authorid).First(&userinfo)
-			resvideos[index].Author = UserLoginInfo{Id: userinfo.ID, Name: userinfo.Username, FollowCount: userinfo.FollowCount, FollowerCount: userinfo.FollowerCount, IsFollow: flag && model.Isfollow(userinfo.ID, val.Authorid)}
+			resvideos[index].Author = UserLoginInfo{Id: userinfo.ID, Name: userinfo.Username, FollowCount: userinfo.FollowCount, FollowerCount: userinfo.FollowerCount, IsFollow: flag && model.Isfollow(loginuser.ID, val.Authorid)}
 			resvideos[index].CommentCount = val.Commentcount
 			resvideos[index].FavoriteCount = val.Favoritecount
 			resvideos[index].CoverUrl = val.Coverurl
