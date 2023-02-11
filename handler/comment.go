@@ -58,7 +58,6 @@ func Commentlist(c *gin.Context) {
 	var commentlist []model.Comment
 	model.Connect2sql().Where("videoid = ?", video_id).Find(&commentlist)
 	lenlist := len(commentlist)
-	fmt.Println(lenlist)
 	responselist := make([]CommentResponse, lenlist)
 	var userinfo model.Userinfo
 	loginuser, exist := c.Get("userinfo")
