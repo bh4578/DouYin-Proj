@@ -8,8 +8,8 @@
 
 
 修改为gin版本：
-1.上传视频功能暂未实现，需要在feed.go文件中修改url来播放视频
-![image](https://user-images.githubusercontent.com/58996015/216958350-45bbf600-2041-4fbc-b7c1-cf8372b24b93.png)
+1.运行前修改publish.go 中ip地址为本机ipv4地址：
+![image](https://user-images.githubusercontent.com/58996015/219223327-320045fd-0c77-44c8-b985-175b67f4a11c.png)
 
 2.修改了数据库的数据类型，需要drop一下数据库再创建个
 
