@@ -1,6 +1,7 @@
 package main
 
-//
+// 下面函数用于创建用户信息表、运行后应注释掉
+
 //func main() {
 //	db := model.Connect2sql()
 //	var err error

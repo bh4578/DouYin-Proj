@@ -42,7 +42,10 @@ func Getuser(db *gorm.DB, username string) Userinfo {
 
 // Encodetoken 此函数用于做jwt编码
 func Encodetoken(userid string, username string) string {
+	// keyinfo是JWT签发和验证时的密钥（Key），是由一串随机字符串组成。
 	keyinfo := []byte("3.1415926+0.618+qweasd")
+	// 用于创建Token对象的函数，method表示签名算法，claims表示添加到Token中的声明
+	// 返回一个Token对象
 	temp := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userid":   userid,
 		"username": username,
@@ -57,6 +60,7 @@ func Encodetoken(userid string, username string) string {
 		// iat: jwt的签发时间
 		// jti: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。
 	})
+	// 将 JWT Token 序列化成字符串并对其进行签名，生成字符串token
 	token, err := temp.SignedString(keyinfo)
 	if err != nil {
 		log.Println(err.Error())
@@ -68,6 +72,9 @@ func Encodetoken(userid string, username string) string {
 // Decodetoken 此函数用于做jwt解码，返回解码后得到的用户id与用户名
 func Decodetoken(token string) []string {
 	keyinfo := []byte("3.1415926+0.618+qweasd")
+	// jwt.Parse()函数是用来解析JWT字符串并验证签名的函数。
+	// 第一个参数时要解析的JWT字符串，第二个参数是一个回调函数，用于解析所需密钥或是证书。
+	// 回调函数返回值是验证JWT签名的密钥或证书，JWT库会用返回的密钥对JWT进行解密，返回值为nil时JWT拒接解析并返回错误信息。
 	parse, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		return keyinfo, nil
 	})

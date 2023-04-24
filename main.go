@@ -14,15 +14,25 @@ import (
 )
 
 func main() {
-	r := gin.Default()
-	r.Static("/static", "./public")
+	r := gin.Default() // 默认路由引擎
+	// 静态文件
+	r.Static("/static", "./public") //将/static路径映射到./public目录,客户端就可以通过/static路径HTTP请求./public文件夹下的静态文件了。
+	// 将多个相关的路由归为一组
+	// 创建了一个名为 /douyin 的路由组，并且在路由组上应用了一个中间件 router.RootMw()。
+	// 在请求到达处理函数之前或之后进行一些处理。
 	root := r.Group("/douyin", router.RootMw())
+	// 用户路由注册（获取用户信息、注册、登录）
 	user_router.Register(root)
+	// 浏览器向服务器发起GET请求时，JSON格式返回一些视频内容。
+	// 中间件函数：鉴权、提取用户信息
+	// 获取指定用户发布的视频列表
 	video_router.Register(root)
+
 	favorate_router.Register(root)
 	comment_router.Register(root)
 	relation_couter.Register(root)
 	message_router.Register(root)
+	// 启动HTTP服务器，开始监听并处理客户端请求。
 	r.Run()
 
 }

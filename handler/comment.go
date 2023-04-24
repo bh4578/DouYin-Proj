@@ -2,7 +2,7 @@ package handler
 
 import (
 	"Douyin/model"
-	"fmt"
+	//"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -39,6 +39,7 @@ func Publishcomment(c *gin.Context) {
 		Content: comment_text, Videoid: uint(video_id), Authorid: temp.ID}
 	if action_type == "1" {
 		model.Connect2sql().Create(&comment)
+
 		c.JSON(http.StatusOK, struct {
 			Response
 			Comment CommentResponse `json:"comment"`

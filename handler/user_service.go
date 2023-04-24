@@ -64,10 +64,12 @@ func Register(c *gin.Context) {
 	}
 }
 
+// 用户登录
 func Login(c *gin.Context) {
 	username := c.Query("username")
 	//需要对密码进行sha256加密(MD5运行速度更快，sha256更安全)，而不是明文存储
 	password := Sha256(c.Query("password"))
+	// 该函数就是返回一个db来操作SQL
 	db := model.Connect2sql()
 	//在数据库中获得该用户
 	userinfo := model.Getuser(db, username)
@@ -96,11 +98,13 @@ func Login(c *gin.Context) {
 }
 
 // 返回用户信息
+// Query会解码URL中带有的参数user_id
 func UserInfo(c *gin.Context) {
 	userid := c.Query("user_id")
 	var userinfo model.Userinfo
-	//从数据库中获得该用户
+	//从数据库中根据userid获得该用户，将数据存在userinfo结构体中
 	model.Connect2sql().First(&userinfo, userid)
+	// 在前边中间件函数c.Set将名为userinfo的键值对存储在当前请求的上下文中。Get获取这个值
 	loginuser, _ := c.Get("userinfo")
 	userlogininfo := UserLoginInfo{Id: userinfo.ID, Name: userinfo.Username,
 		FollowCount: userinfo.FollowCount, FollowerCount: userinfo.FollowerCount,
